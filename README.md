@@ -6,6 +6,14 @@ AI-Powered Knowledge Graph to Manim Animation Automation
 Students often struggle to learn from scattered resources, while videos are time-consuming and lack personalization.
 This project uses AI + Manim to automatically generate educational videos. Unlike random online resources, the system extracts knowledge directly from textbooks, making the content reliable, efficient, and accurate for students.
 
+=> **What is Manim?**
+
+We are going to use Manim, so this is exactly what it is:
+Manim (Mathematical Animation Engine) is a Python library that lets you create **high-quality animated videos** programmatically.
+It is mainly used for **educational animations**, like explaining math, science, or concepts visually.
+In this project, Manim takes the **AI-generated lesson** and turns it into a **dynamic animated video** that the student can watch.
+
+
 => **Solution Approach**
 
 The solution works as a pipeline:
