@@ -1,16 +1,1 @@
-flowchart TD
-    style A fill:#FFEB3B,stroke:#333,stroke-width:2px,color:#000
-    style B fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
-    style D fill:#FF9800,stroke:#333,stroke-width:2px,color:#000
-    style E fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff
-    style F fill:#F44336,stroke:#333,stroke-width:2px,color:#fff
-
-    A[💡 Student Inputs Concept<br><sub>Type your idea or topic</sub>] --> B[🔍 Search Knowledge Graph<br><sub>AI finds relevant info</sub>]
-    B --> C[🤖 AI Generates Explanation + Script<br><sub>Creates lesson content</sub>]
-    C --> D[📝 Formatter Structures Lesson<br><sub>Makes it readable & organized</sub>]
-    D --> E[🎬 Manim Creates Animated Video<br><sub>Transforms lesson into animation</sub>]
-    E --> F[🎓 Student Receives Video Output<br><sub>Watch & learn interactively</sub>]
-```
-
 
