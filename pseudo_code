@@ -1,0 +1,123 @@
+# Backend Orchestrator
+
+FUNCTION Main_Orchestrator(user_query, knowledge_graph_source):
+    // 1. Retrieve concept from the Knowledge Graph
+    knowledge_data = Knowledge_Graph_Module.Retrieve_Concept(user_query)
+
+    // 2. Handle cases where the concept is not found
+    IF knowledge_data IS NULL:
+        PRINT "Concept not found. Please rephrase your query."
+        RETURN
+    END IF
+
+    // 3. Generate script and visuals using AI
+    script_and_slides = AI_Module.Generate_Content(knowledge_data)
+
+    // 4. Handle cases where content generation fails
+    IF script_and_slides IS NULL:
+        PRINT "Failed to generate script and slides. Please try again."
+        RETURN
+    END IF
+
+    // 5. Format the content for Manim
+    manim_ready_script = Formatter_Module.Format_Content(script_and_slides)
+
+    // 6. Handle cases where formatting fails
+    IF manim_ready_script IS NULL:
+        PRINT "Failed to format content for Manim."
+        RETURN
+    END IF
+
+    // 7. Generate the final video using Manim
+    video_file_path = Manim_Automation_Module.Generate_Video(manim_ready_script)
+
+    // 8. Store the generated video
+    Storage_Retrieval_Module.Store_Output(video_file_path, user_query)
+
+    // 9. Return the path to the user
+    RETURN video_file_path
+END FUNCTION
+
+
+# Knowledge Graph Module
+
+FUNCTION Retrieve_Concept(user_query):
+    // 1. Pre-process the user's query
+    processed_query = Sanitize_And_Tokenize(user_query)
+
+    // 2. Query the Knowledge Graph using semantic search
+    relevant_nodes = Query_Graph_Database(processed_query)
+
+    // 3. Extract detailed information from the subgraph
+    detailed_data = Get_Details_From_Nodes(relevant_nodes)
+
+    // 4. Return the structured data or null if not found
+    RETURN detailed_data
+END FUNCTION
+
+
+
+# AI Module
+
+FUNCTION Generate_Content(concept_data):
+    // 1. Construct a detailed prompt for the AI model
+    prompt_template = "You are an expert educator. Given the following knowledge graph data: {concept_data}. Generate a detailed educational script and a list of visual slides. The output must be in JSON format."
+
+    // 2. Call the AI model (e.g., a Large Language Model)
+    raw_ai_output = Call_AI_API(prompt_template, concept_data)
+
+    // 3. Parse and validate the output
+    parsed_output = Parse_JSON(raw_ai_output)
+
+    // 4. Return the validated script and slide data
+    RETURN parsed_output
+END FUNCTION
+
+#  Slide & Script Formatter
+
+FUNCTION Format_Content(script_and_slides_data):
+    // 1. Initialize a new Manim scene script
+    manim_script_header = "from manim import *\nclass GeneratedScene(Scene):\n    def construct(self):\n"
+
+    // 2. Loop through each slide from the AI data
+    FOR EACH slide IN script_and_slides_data.slides:
+        // 3. Generate Manim code for the voiceover text
+        manim_script_body += "        voiceover = Text(f\"{slide.voiceover_script}\").to_edge(DOWN)\n"
+        manim_script_body += "        self.play(Write(voiceover))\n"
+
+        // 4. Map the 'visuals' description to specific Manim code
+        visual_type = slide.visuals[0]
+        IF visual_type == "diagram":
+            manim_script_body += "        diagram = Create_Diagram_Mobject()\n"
+            manim_script_body += "        self.play(Create(diagram))\n"
+        ELSE IF visual_type == "List of ingredients":
+            manim_script_body += "        list_obj = BulletedList(...)\n"
+            manim_script_body += "        self.play(Write(list_obj))\n"
+        END IF
+
+        // 5. Add a pause and clean up the slide
+        manim_script_body += "        self.wait(2)\n"
+        manim_script_body += "        self.play(FadeOut(voiceover), FadeOut(visual_objects))\n"
+    END FOR
+
+    // 6. Combine all parts into a complete script file
+    final_script = manim_script_header + manim_script_body
+    RETURN final_script
+END FUNCTION
+
+# Manim Automation Module
+
+FUNCTION Generate_Video(manim_script):
+    // 1. Save the generated Manim script to a temporary file
+    Save_To_File("temp_manim_script.py", manim_script)
+
+    // 2. Execute the Manim command-line tool
+    // This command generates a video from the script
+    Execute_Shell_Command("manim -pql temp_manim_script.py GeneratedScene")
+
+    // 3. Get the path of the generated video file
+    video_path = Get_Generated_Video_Path()
+
+    // 4. Return the path
+    RETURN video_path
+END FUNCTION
